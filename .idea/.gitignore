@@ -1,0 +1,29 @@
+# IDE and Editor Specific
+*.idea/
+*.vscode/
+*.sublime-workspace
+*.sublime-project
+*.emacs
+*.project
+*.classpath
+
+# Java specific
+*.class
+*.jar
+*.war
+*.ear
+*.class
+
+# Maven
+target/
+!.mvn/wrapper/mvnw
+!.mvn/wrapper/mvnw.cmd
+mvnw
+mvnw.cmd
+.settings/
+.checkstyle/
+.pmd/
+.findbugs/
+*.iml
+*.ipr
+*.iws
