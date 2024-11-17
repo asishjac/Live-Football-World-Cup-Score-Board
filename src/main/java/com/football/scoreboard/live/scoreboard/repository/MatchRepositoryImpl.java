@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -14,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class MatchRepositoryImpl implements MatchRepository{
 
-    private Map<String, Match> liveMatchesMap = new ConcurrentHashMap<>();
+    private final Map<String, Match> liveMatchesMap = new ConcurrentHashMap<>();
     @Override
     public Match saveMatch(String homeTeam, String awayTeam) {
         return null;

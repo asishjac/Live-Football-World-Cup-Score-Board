@@ -10,7 +10,7 @@ import java.util.List;
 @Slf4j
 public class MatchOperationServiceImpl implements MatchOperationService {
 
-    private MatchRepository matchRepository;
+    private final MatchRepository matchRepository;
 
     public MatchOperationServiceImpl(MatchRepository matchRepository) {
         this.matchRepository = matchRepository;
