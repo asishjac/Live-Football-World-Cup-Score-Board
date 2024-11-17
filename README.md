@@ -11,7 +11,7 @@ This lightweight Java library provides real-time tracking and scoring for live f
 
 
 ### Architecture
-![ScoreBoardApp-ClassDiagram.png](ScoreBoardApp-ClassDiagram.png)
+![ScoreBoardApp_ClassDiagram.png](ScoreBoardApp_ClassDiagram.png)
 
 ### Installation
 

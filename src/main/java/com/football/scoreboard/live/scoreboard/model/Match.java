@@ -13,7 +13,7 @@ public record Match(
         @With int awayTeamScore,
         LocalDateTime startTime
 ) {
-    public Match(String homeTeam, String awayTeam, int homeTeamScore, int awayTeamScore, LocalDateTime startTime) {
+    public Match(String homeTeam, String awayTeam, int homeTeamScore, int awayTeamScore) {
         this(UUID.randomUUID().toString(), homeTeam, awayTeam, homeTeamScore, awayTeamScore, LocalDateTime.now());
     }
 
