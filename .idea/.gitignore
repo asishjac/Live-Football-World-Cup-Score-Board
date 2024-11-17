@@ -26,3 +26,10 @@ mvnw.cmd
 *.iml
 *.ipr
 *.iws
+
+/compiler.xml
+/encodings.xml
+/jarRepositories.xml
+/misc.xml
+/vcs.xml
+/workspace.xml
