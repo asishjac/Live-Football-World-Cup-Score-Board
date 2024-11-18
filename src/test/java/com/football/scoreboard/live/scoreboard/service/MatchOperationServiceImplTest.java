@@ -1,5 +1,6 @@
 package com.football.scoreboard.live.scoreboard.service;
 
+import com.football.scoreboard.live.scoreboard.exception.MatchNotFoundException;
 import com.football.scoreboard.live.scoreboard.model.Match;
 import com.football.scoreboard.live.scoreboard.repository.MatchRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -13,6 +14,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -121,14 +123,51 @@ class MatchOperationServiceImplTest {
 
         @Test
         void testUpdateMatchScore() {
+
             var match = new Match("Team A", "Team B", 0, 0);
-            when(matchRepository.findMatchById("1001")).thenReturn(match);
+            var updatedMatch = match.withAwayTeamScore(3).withHomeTeamScore(2);
 
-            matchOperationService.updateMatchScore("1001", 2, 3);
+            when(matchRepository.findMatchById(match.matchId())).thenReturn(match);
+            when(matchRepository.saveMatch(updatedMatch)).thenReturn(updatedMatch);
 
-            verify(matchRepository).findMatchById("1001");
-            //verify(matchRepository).(match);
+            matchOperationService.updateMatchScore(match.matchId(), 2, 3);
+
+            verify(matchRepository).findMatchById(match.matchId());
+            verify(matchRepository).saveMatch(updatedMatch);
+
         }
+
+        @Test
+        void testUpdateMatchScoreIfMatchNotFounnd() {
+            var match = new Match("Team A", "Team B", 0, 0);
+
+            when(matchRepository.findMatchById(match.matchId())).thenReturn(null);
+
+            var exceptionThrown = assertThrows(MatchNotFoundException.class, () -> matchOperationService.updateMatchScore(match.matchId(), 2, 3));
+
+            assertEquals("Match with ID " + match.matchId() + " not found", exceptionThrown.getMessage());
+        }
+
+        @Test
+        void testUpdateMatchScoreIfNegativeScore() {
+            var exceptionThrown = assertThrows(IllegalArgumentException.class, () -> matchOperationService.updateMatchScore(UUID.randomUUID().toString(), 1, -2));
+            assertEquals("Score cannot be negative", exceptionThrown.getMessage());
+
+            exceptionThrown = assertThrows(IllegalArgumentException.class, () -> matchOperationService.updateMatchScore(UUID.randomUUID().toString(), -1, 2));
+            assertEquals("Score cannot be negative", exceptionThrown.getMessage());
+
+            exceptionThrown = assertThrows(IllegalArgumentException.class, () -> matchOperationService.updateMatchScore(UUID.randomUUID().toString(), -1, -1));
+            assertEquals("Score cannot be negative", exceptionThrown.getMessage());
+        }
+
+        @ParameterizedTest
+        @NullAndEmptySource
+        @ValueSource(strings = {" ", "\t", "\n"})
+        void testUpdateMatchScoreIfInvalidMatchId(String matchId) {
+            var exceptionThrown = assertThrows(IllegalArgumentException.class, () -> matchOperationService.updateMatchScore(matchId, 1, 2));
+            assertEquals("Input string cannot be null, empty, or contain only whitespaces", exceptionThrown.getMessage());
+        }
+
     }
 
 }
