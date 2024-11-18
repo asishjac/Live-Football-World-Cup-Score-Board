@@ -23,6 +23,11 @@ public class MatchOperationServiceImpl implements MatchOperationService {
     public Match startMatch(String homeTeam, String awayTeam) {
         log.info("Starting match between {} and {}", homeTeam, awayTeam);
         validateTeams(homeTeam, awayTeam);
+        var matchesInProgress = matchRepository.findAllMatches();
+        if (matchesInProgress.stream().anyMatch(match ->
+                isTeamPlaying(match,homeTeam) || isTeamPlaying(match,awayTeam))) {
+            throw new IllegalStateException("A match is already in progress involving one or both of the teams.");
+        }
         var match = matchRepository.saveMatch(homeTeam, awayTeam);
         log.info("Match started successfully with ID: {}", match.matchId());
         return match;
@@ -44,5 +49,9 @@ public class MatchOperationServiceImpl implements MatchOperationService {
     public List<String> getMatchSummary() {
         log.info("Getting match summary");
         return List.of();
+    }
+
+    private boolean isTeamPlaying(Match match, String team) {
+        return match.homeTeam().equalsIgnoreCase(team) || match.awayTeam().equalsIgnoreCase(team);
     }
 }
