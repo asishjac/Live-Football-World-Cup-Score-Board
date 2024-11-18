@@ -9,10 +9,10 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class MatchOperationServiceImplTest {
 
@@ -66,4 +66,14 @@ class MatchOperationServiceImplTest {
         assertEquals("Input string cannot be null, empty, or contain only whitespaces", exceptionThrown.getMessage());
     }
 
+    @Test
+    void testStartMatchIfAnyTeamsAreAlreadyPlaying() {
+
+        when(matchRepository.findAllMatches()).thenReturn(List.of(new Match("Team A", "Team B", 10, 10)));
+
+        var exceptionThrown = assertThrows(IllegalStateException.class, () -> matchOperationService.startMatch("Team A", "Team C"));
+
+        assertEquals("A match is already in progress involving one or both of the teams.", exceptionThrown.getMessage());
+        verify(matchRepository, never()).saveMatch("Team A", "Team C");
+    }
 }
