@@ -15,7 +15,7 @@ public class MatchRepositoryImpl implements MatchRepository{
 
     private final Map<String, Match> liveMatchesMap = new ConcurrentHashMap<>();
     @Override
-    public Match saveMatch(String homeTeam, String awayTeam) {
+    public Match saveMatch(Match match) {
         return null;
     }
 

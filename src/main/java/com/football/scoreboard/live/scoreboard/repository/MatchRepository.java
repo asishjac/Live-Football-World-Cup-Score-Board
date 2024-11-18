@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface MatchRepository {
 
-    Match saveMatch(String homeTeam, String awayTeam);
+    Match saveMatch(Match match);
 
     Match findMatchById(String matchId);
 

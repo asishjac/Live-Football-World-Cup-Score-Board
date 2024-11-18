@@ -28,7 +28,7 @@ public class MatchOperationServiceImpl implements MatchOperationService {
                 isTeamPlaying(match, homeTeam) || isTeamPlaying(match, awayTeam))) {
             throw new IllegalStateException("A match is already in progress involving one or both of the teams.");
         }
-        var match = matchRepository.saveMatch(homeTeam, awayTeam);
+        var match = matchRepository.saveMatch(new Match(homeTeam, awayTeam,0,0));
         log.info("Match started successfully with ID: {}", match.matchId());
         return match;
     }
