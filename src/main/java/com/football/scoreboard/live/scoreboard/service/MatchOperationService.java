@@ -8,7 +8,7 @@ public interface MatchOperationService {
 
     Match startMatch(String homeTeam, String awayTeam);
 
-    Match getMatch(String matchId);
+    void updateMatchScore(String matchId, int homeTeamScore, int awayTeamScore);
 
     void finishMatch(String matchId);
 

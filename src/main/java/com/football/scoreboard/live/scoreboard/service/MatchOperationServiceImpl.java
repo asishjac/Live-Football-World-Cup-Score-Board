@@ -25,7 +25,7 @@ public class MatchOperationServiceImpl implements MatchOperationService {
         validateTeams(homeTeam, awayTeam);
         var matchesInProgress = matchRepository.findAllMatches();
         if (matchesInProgress.stream().anyMatch(match ->
-                isTeamPlaying(match,homeTeam) || isTeamPlaying(match,awayTeam))) {
+                isTeamPlaying(match, homeTeam) || isTeamPlaying(match, awayTeam))) {
             throw new IllegalStateException("A match is already in progress involving one or both of the teams.");
         }
         var match = matchRepository.saveMatch(homeTeam, awayTeam);
@@ -33,10 +33,10 @@ public class MatchOperationServiceImpl implements MatchOperationService {
         return match;
     }
 
+
     @Override
-    public Match getMatch(String matchId) {
-        log.info("Getting match details for {}", matchId);
-        return null;
+    public void updateMatchScore(String matchId, int homeTeamScore, int awayTeamScore) {
+        log.info("Updating match score for {} with home team score: {} and away team score: {}", matchId, homeTeamScore, awayTeamScore);
     }
 
     @Override
