@@ -22,6 +22,8 @@ class MatchOperationServiceImplTest {
     @Test
     void testStartMatch() {
 
+        when(matchRepository.saveMatch("Team A", "Team B")).thenReturn(new Match("Team A", "Team B", 0, 0));
+
         matchOperationService.startMatch("Team A", "Team B");
 
         // Verify that the match was saved to the repository
