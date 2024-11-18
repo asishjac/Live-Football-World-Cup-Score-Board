@@ -1,13 +1,15 @@
 package com.football.scoreboard.live.scoreboard.service;
 
+import com.football.scoreboard.live.scoreboard.exception.MatchNotFoundException;
 import com.football.scoreboard.live.scoreboard.model.Match;
 import com.football.scoreboard.live.scoreboard.repository.MatchRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
-import static com.football.scoreboard.live.scoreboard.util.ValidationUtil.validateTeams;
+import static com.football.scoreboard.live.scoreboard.util.ValidationUtil.*;
 
 @Service
 @Slf4j
@@ -36,7 +38,14 @@ public class MatchOperationServiceImpl implements MatchOperationService {
 
     @Override
     public void updateMatchScore(String matchId, int homeTeamScore, int awayTeamScore) {
-        log.info("Updating match score for {} with home team score: {} and away team score: {}", matchId, homeTeamScore, awayTeamScore);
+        log.info("Updating match score for match ID: {} with home team score: {} and away team score: {}", matchId, homeTeamScore, awayTeamScore);
+        isAbsoluteScore(homeTeamScore);
+        isAbsoluteScore(awayTeamScore);
+        isValidString(matchId);
+        var match = Optional.ofNullable(matchRepository.findMatchById(matchId))
+                .orElseThrow(() -> new MatchNotFoundException("Match with ID " + matchId + " not found"));
+        match = matchRepository.saveMatch(match.withAwayTeamScore(awayTeamScore).withHomeTeamScore(homeTeamScore));
+        log.info("Match score updated successfully for match ID: {} ", match.matchId());
     }
 
     @Override
