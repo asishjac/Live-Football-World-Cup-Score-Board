@@ -6,6 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static com.football.scoreboard.live.scoreboard.util.ValidationUtil.validateTeams;
+
 @Service
 @Slf4j
 public class MatchOperationServiceImpl implements MatchOperationService {
@@ -19,7 +22,10 @@ public class MatchOperationServiceImpl implements MatchOperationService {
     @Override
     public Match startMatch(String homeTeam, String awayTeam) {
         log.info("Starting match between {} and {}", homeTeam, awayTeam);
-        return null;
+        validateTeams(homeTeam, awayTeam);
+        var match = matchRepository.saveMatch(homeTeam, awayTeam);
+        log.info("Match started successfully with ID: {}", match.matchId());
+        return match;
     }
 
     @Override

@@ -51,7 +51,7 @@ class MatchOperationServiceImplTest {
 
         var exceptionThrown = assertThrows(IllegalArgumentException.class, () -> matchOperationService.startMatch("Team A", "Team A"));
 
-        assertEquals("Home and away teams cannot be the same", exceptionThrown.getMessage());
+        assertEquals("Home and Away teams cannot be the same", exceptionThrown.getMessage());
     }
 
     @ParameterizedTest
@@ -60,10 +60,10 @@ class MatchOperationServiceImplTest {
     void testStartMatchIfTeamsAreNullOrEmpty(String team) {
 
         var exceptionThrown = assertThrows(IllegalArgumentException.class, () -> matchOperationService.startMatch(team, "Team B"));
-        assertEquals("Home and away teams cannot be null or empty", exceptionThrown.getMessage());
+        assertEquals("Input string cannot be null, empty, or contain only whitespaces", exceptionThrown.getMessage());
 
         exceptionThrown = assertThrows(IllegalArgumentException.class, () -> matchOperationService.startMatch("Team A", team));
-        assertEquals("Home and away teams cannot be null or empty", exceptionThrown.getMessage());
+        assertEquals("Input string cannot be null, empty, or contain only whitespaces", exceptionThrown.getMessage());
     }
 
 }
