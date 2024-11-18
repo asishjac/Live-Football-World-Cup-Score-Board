@@ -21,4 +21,11 @@ public class ValidationUtil {
         return true;
     }
 
+    public static boolean isAbsoluteScore(int score) {
+        if (score < 0) {
+            throw new IllegalArgumentException("Score cannot be negative");
+        }
+        return true;
+    }
+
 }
