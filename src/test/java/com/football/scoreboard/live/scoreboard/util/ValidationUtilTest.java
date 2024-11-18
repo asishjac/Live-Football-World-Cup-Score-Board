@@ -34,4 +34,17 @@ class ValidationUtilTest {
         var result = ValidationUtil.isValidString("Valid String");
         assertTrue(result, "Input string is valid");
     }
+
+    @Test
+    void testIsAbsoluteScoreWithValidScore() {
+        var result = ValidationUtil.isAbsoluteScore(1);
+        assertTrue(result, "Input score is valid");
+    }
+
+    @Test
+    void testIsAbsoluteScoreWithInValidScore() {
+        var exceptionThrown = assertThrows(IllegalArgumentException.class, () ->
+                ValidationUtil.isAbsoluteScore(-1), "Score cannot be negative");
+        assertEquals("Score cannot be negative", exceptionThrown.getMessage());
+    }
 }
