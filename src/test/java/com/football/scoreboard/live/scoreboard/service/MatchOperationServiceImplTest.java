@@ -115,8 +115,6 @@ class MatchOperationServiceImplTest {
             );
         }
     }
-
-
     @Nested
     @DisplayName("Update Match Score Test Scenarios")
     class UpdateMatchTestScenarios {
@@ -138,7 +136,7 @@ class MatchOperationServiceImplTest {
         }
 
         @Test
-        void testUpdateMatchScoreIfMatchNotFounnd() {
+        void testUpdateMatchScoreIfMatchNotFound() {
             var match = new Match("Team A", "Team B", 0, 0);
 
             when(matchRepository.findMatchById(match.matchId())).thenReturn(null);
@@ -167,7 +165,40 @@ class MatchOperationServiceImplTest {
             var exceptionThrown = assertThrows(IllegalArgumentException.class, () -> matchOperationService.updateMatchScore(matchId, 1, 2));
             assertEquals("Input string cannot be null, empty, or contain only whitespaces", exceptionThrown.getMessage());
         }
-
     }
+    @Nested
+    @DisplayName("Finish Match Test Scenarios")
+    class FinishMatchTestScenarios {
 
+        @Test
+        void testFinishMatchIfMatchWithIdExist() {
+
+            var match = new Match("Team A", "Team B", 0, 0);
+            when(matchRepository.findMatchById(match.matchId())).thenReturn(match);
+
+            matchOperationService.finishMatch(match.matchId());
+
+            verify(matchRepository).findMatchById(match.matchId());
+            verify(matchRepository).deleteMatchById(match.matchId());
+        }
+
+        @Test
+        void testFinishMatchIfMatchWithIdDoesNotExist() {
+            var match = new Match("Team A", "Team B", 0, 0);
+
+            when(matchRepository.findMatchById(match.matchId())).thenReturn(null);
+
+            var exceptionThrown = assertThrows(MatchNotFoundException.class, () -> matchOperationService.finishMatch(match.matchId()));
+
+            assertEquals("Match with ID " + match.matchId() + " not found", exceptionThrown.getMessage());
+        }
+
+        @ParameterizedTest
+        @NullAndEmptySource
+        @ValueSource(strings = {" ", "\t", "\n"})
+        void testFinishMatchIfMatchWithIdIsInvalid(String matchId) {
+            var exceptionThrown = assertThrows(IllegalArgumentException.class, () -> matchOperationService.finishMatch(matchId));
+            assertEquals("Input string cannot be null, empty, or contain only whitespaces", exceptionThrown.getMessage());
+        }
+    }
 }
