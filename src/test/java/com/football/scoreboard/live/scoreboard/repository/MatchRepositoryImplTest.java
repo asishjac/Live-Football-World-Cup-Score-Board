@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -21,13 +22,11 @@ class MatchRepositoryImplTest {
         assertEquals(match, savedMatch);
         assertEquals(match, matchRepository.findMatchById(match.matchId()));
 
-        // clear liveMatchesMap
-        matchRepository.deleteMatchById(match.matchId());
     }
 
     @Test
     void testFindMatchById() {
-        Match match = new Match("Team C", "Team D", 1, 1);
+        var match = new Match("Team C", "Team D", 1, 1);
         matchRepository.saveMatch(match);
 
         var foundMatch = matchRepository.findMatchById(match.matchId());
@@ -38,28 +37,34 @@ class MatchRepositoryImplTest {
         assertEquals(1, foundMatch.awayTeamScore());
         assertEquals(1, foundMatch.homeTeamScore());
 
-        // clear liveMatchesMap
-        matchRepository.deleteMatchById(match.matchId());
-
     }
 
 
     @Test
     void testFindAllMatch() {
         var matches = List.of(
-                new Match("Team B", "Team C", 10, 10),
-                new Match("Team D", "Team E", 0, 0)
+                new Match("Team W", "Team X", 10, 10),
+                new Match("Team Y", "Team Z", 0, 0)
         );
 
         matches.forEach(matchRepository::saveMatch);
 
         var foundMatches = matchRepository.findAllMatches();
-        assertEquals(matches.size(), foundMatches.size());
-        assertEquals(matches.get(0).matchId(), foundMatches.get(0).matchId());
-        assertEquals(matches.get(1).matchId(), foundMatches.get(1).matchId());
 
-        // clear liveMatchesMap
-        matches.forEach(match -> matchRepository.deleteMatchById(match.matchId()));
+        // Sort both lists by matchId
+        var sortedExpected = matches.stream()
+                .sorted(Comparator.comparing(Match::matchId))
+                .toList();
+
+        var sortedFound = foundMatches.stream()
+                .sorted(Comparator.comparing(Match::matchId))
+                .toList();
+
+        assertEquals(sortedExpected.size(), sortedFound.size());
+        assertEquals(
+                sortedExpected.stream().map(Match::matchId).toList(),
+                sortedFound.stream().map(Match::matchId).toList()
+        );
     }
 
     @Test
