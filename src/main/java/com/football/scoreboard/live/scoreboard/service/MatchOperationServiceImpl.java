@@ -42,8 +42,7 @@ public class MatchOperationServiceImpl implements MatchOperationService {
         isAbsoluteScore(homeTeamScore);
         isAbsoluteScore(awayTeamScore);
         isValidString(matchId);
-        var match = Optional.ofNullable(matchRepository.findMatchById(matchId))
-                .orElseThrow(() -> new MatchNotFoundException("Match with ID " + matchId + " not found"));
+        var match = getMatchById(matchId);
         match = matchRepository.saveMatch(match.withAwayTeamScore(awayTeamScore).withHomeTeamScore(homeTeamScore));
         log.info("Match score updated successfully for match ID: {} ", match.matchId());
     }
@@ -51,7 +50,10 @@ public class MatchOperationServiceImpl implements MatchOperationService {
     @Override
     public void finishMatch(String matchId) {
         log.info("Finishing match {}", matchId);
-
+        isValidString(matchId);
+        var match = getMatchById(matchId);
+        matchRepository.deleteMatchById(match.matchId());
+        log.info("Match finished successfully for match ID: {}", match.matchId());
     }
 
     @Override
@@ -62,5 +64,10 @@ public class MatchOperationServiceImpl implements MatchOperationService {
 
     private boolean isTeamPlaying(Match match, String team) {
         return match.homeTeam().equalsIgnoreCase(team) || match.awayTeam().equalsIgnoreCase(team);
+    }
+
+    private Match getMatchById(String matchId){
+        return Optional.ofNullable(matchRepository.findMatchById(matchId))
+                .orElseThrow(() -> new MatchNotFoundException("Match with ID " + matchId + " not found"));
     }
 }
