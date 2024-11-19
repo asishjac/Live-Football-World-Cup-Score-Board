@@ -4,6 +4,7 @@ import com.football.scoreboard.live.scoreboard.model.Match;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.Comparator;
 import java.util.List;
@@ -76,7 +77,7 @@ class MatchRepositoryImplTest {
 
         var foundMatch = matchRepository.findMatchById(match.matchId());
 
-        assertEquals(null, foundMatch);
+        assertNull(foundMatch);
     }
 
 
