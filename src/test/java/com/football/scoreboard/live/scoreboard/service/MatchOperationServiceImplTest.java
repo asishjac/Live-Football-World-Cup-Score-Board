@@ -201,4 +201,38 @@ class MatchOperationServiceImplTest {
             assertEquals("Input string cannot be null, empty, or contain only whitespaces", exceptionThrown.getMessage());
         }
     }
+    @Nested
+    @DisplayName("Get Match Summary Test Scenarios")
+    class GetMatchSummaryTestScenarios {
+
+        @Test
+        void testGetMatchSummaryIfNoMatchInProgress() {
+            when(matchRepository.findAllMatches()).thenReturn(List.of());
+
+            var summary = matchOperationService.getMatchSummary();
+
+            assertEquals(0, summary.size());
+        }
+
+        @Test
+        void testGetMatchSummaryIfMatchInProgress() {
+            var match1 = new Match("Mexico", "Canada", 0, 5);
+            var match2 = new Match("Spain", "Brazil", 10, 2);
+            var match3 = new Match("Germany", "France", 2, 2);
+            var match4 = new Match("Uruguay", "Italy", 6, 6);
+            var match5 = new Match("Argentina", "Australia", 3, 1);
+
+
+            when(matchRepository.findAllMatches()).thenReturn(List.of(match1, match2,match3, match4, match5));
+
+            var summary = matchOperationService.getMatchSummary();
+
+            assertEquals(5, summary.size());
+            assertEquals("1. Uruguay 6 - Italy 6", summary.get(0));
+            assertEquals("2. Spain 10 - Brazil 2", summary.get(1));
+            assertEquals("3. Mexico 0 - Canada 5", summary.get(2));
+            assertEquals("4. Argentina 3 - Australia 1", summary.get(3));
+            assertEquals("5. Germany 2 - France 2", summary.get(4));
+        }
+    }
 }
