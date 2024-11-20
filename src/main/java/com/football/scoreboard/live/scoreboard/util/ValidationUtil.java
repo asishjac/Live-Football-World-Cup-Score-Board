@@ -32,7 +32,7 @@ public class ValidationUtil {
      * @throws IllegalArgumentException If the input string is null, empty, or contains only whitespaces.
      */
     public static boolean isValidString(String str) {
-        if (str == null || str.trim().isEmpty()) {
+        if (str == null || str.isBlank()) {
             throw new IllegalArgumentException("Input string cannot be null, empty, or contain only whitespaces");
         }
         return true;
