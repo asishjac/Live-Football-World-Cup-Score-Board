@@ -74,7 +74,7 @@ class ScoreboardAppApplicationTests {
 
         var sortedList = matches.stream()
                 .sorted(Comparator.comparing(Match::startTime))
-                .collect(Collectors.toList());
+                .toList();
 
         matchOperationService.updateMatchScore(sortedList.get(0).matchId(), 0, 5);
         matchOperationService.updateMatchScore(sortedList.get(1).matchId(), 10, 2);
